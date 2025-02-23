@@ -1,3 +1,7 @@
+---
+import "../styles/global.css"
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -8,15 +12,32 @@
 		<title>Astro Basics</title>
 	</head>
 	<body>
-		<slot />
+		<div>
+			<slot />
+		</div>
 	</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
+<style is:global>
+	@reference "../styles/global.css";
+	/* En esta versión de tailwindcss (4.0.8) se requiere de referenciar a la stylesheet de donde se importa tailwind
+	para poder utilizar las utility classes junto a la normativa @apply */
+
+	/* En versiones antiguas el tailwind.config.mjs se encargaba de esto pero considero bastante más fácil
+	esta nueva sintaxis.
+	Extraje esta información desde la página oficial de Tailwind: https://tailwindcss.com/docs/functions-and-directives#apply-directive
+	*/
+
+	html{
+		background-color: #13151a;
+		color: white;
 	}
+	body {
+		@apply grid place-content-center m-10;
+		
+	}
+	body > div {
+		@apply container;
+	}
+
 </style>
