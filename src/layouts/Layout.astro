@@ -1,15 +1,21 @@
 ---
-import "../styles/global.css"
+import "../styles/style.css"
+import { ClientRouter } from "astro:transitions";
+interface Props{
+	title: string;
+}
+
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{Astro.props.title}</title>
+		<ClientRouter/>
 	</head>
 	<body>
 		<div>
@@ -19,7 +25,7 @@ import "../styles/global.css"
 </html>
 
 <style is:global>
-	@reference "../styles/global.css";
+	@reference "../styles/style.css";
 	/* En esta versión de tailwindcss (4.0.8) se requiere de referenciar a la stylesheet de donde se importa tailwind
 	para poder utilizar las utility classes junto a la normativa @apply */
 

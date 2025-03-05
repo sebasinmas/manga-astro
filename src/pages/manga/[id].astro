@@ -1,0 +1,36 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, render} from "astro:content";
+
+export async function getStaticPaths() {
+    const mangas = await getCollection("mangas");
+
+    return mangas.map((manga)=>{
+        return{
+            params: {id:manga.slug},
+            props: {manga}
+    }
+    });
+}
+
+const {manga}  = Astro.props;
+const {data, slug} = manga;
+const {title,description,releaseYear,author,img,languages} = data;
+// Esto que pueden parecer muchos pasos es en realidad para ayudar al editor a inferir los tipos
+const {Content} = await render(manga);
+---
+
+<Layout title={`${title} 📔`}>
+    <div class="flex gap-12">
+        <aside class="flex flex-col items-center gap-4">
+            <a href="/" class="transition-all duration-75 hover:text-white hover:opacity-100 hover:scale-110 opacity-70 text-2xl"> 🔙 Volver atrás</a>
+            <img transition:name=`img-${slug}` src=`/${manga.slug}.jpg` alt={manga.slug} class="rounded h-auto w-72">
+        </aside>
+        <main class="max-w-3xl">
+            <h1 transition:name=`title-${title}` class="text-4xl font-bold mb-4">{title}</h1>
+            <div class="prose lg:prose-xl dark:prose-invert">
+                <Content/>
+            </div>
+        </main>
+    </div>
+</Layout>

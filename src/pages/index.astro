@@ -1,11 +1,89 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const mangas = await getCollection("mangas");
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Mangapedia sin más :fuji">
+    <main class="mb-20">
+        <h1 class="text-center text-4xl font-extrabold">
+            Mangas 📖 que recomiendo a los otakus 🤓 <span class="block mt-10">
+                Mangas 📚
+            </span>
+        </h1>
+    </main>
+    <section aria-label="Mangas que me gustan">
+        <div class="px-4 mx-auto max-w-screen">
+            <div class="grid gap-6 md:grid-cols-2">
+                {
+                    mangas.map(async (manga) => {
+                        const { slug, data } = manga;
+                        const {
+                            title,
+                            description,
+                            img,
+                            languages,
+                            releaseYear,
+                            author,
+                        } = data;
+                        const { Content } = await render(manga);
+                        return (
+                            <article class="flex">
+                                <a
+                                    href={`/manga/${slug}`}
+                                    class="mb-2 xl:mb-0 transition hover:scale-110"
+                                >
+                                    <img
+                                        transition:name={`img-${slug}`}
+                                        class="mr-5 w-48 rounded"
+                                        src={`/${img}`}
+                                        alt={title}
+                                    />
+                                </a>
+
+                                <div class="pl-2 md:pl-0 flex flex-col justify-center">
+                                    <h2
+                                        transition:name={`title-${title}`}
+                                        class="mb-2 text-2xl font-bold leading-tight text-white"
+                                    >
+                                        {title}
+                                    </h2>
+
+                                    <p class="mb-4 text-gray-300 max-w-sm">
+                                        {description}
+                                    </p>
+                                    <div class="overflow-y-scroll pr-[20px] max-h-[70px] max-w-[400px] content-container">
+                                        <Content />
+                                    </div>
+                                    <span class="text-xs mt-[10px]">
+                                        ⏳ Publicado por primera vez el:{` ${releaseYear}`}
+                                    </span>
+                                </div>
+                            </article>
+                        );
+                    })
+                }
+            </div>
+        </div>
+    </section>
 </Layout>
+<style>
+    .content-container::-webkit-scrollbar {
+        width: 8px; /* Ancho de la barra de desplazamiento */
+    }
+
+    .content-container::-webkit-scrollbar-thumb {
+        background-color: #4a90e2; /* Color del pulgar (la parte de la barra que se mueve) */
+        border-radius: 10px; /* Bordes redondeados en el pulgar */
+    }
+
+    .content-container::-webkit-scrollbar-track {
+        background-color: #f0f0f0; /* Color de la pista */
+        border-radius: 10px; /* Bordes redondeados en la pista */
+    }
+
+    .content-container::-webkit-scrollbar-corner {
+        background-color: transparent; /* Esquinas transparentes */
+    }
+</style>
